@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    <title>Login with Google</title>
+
+    <!-- Include Google API library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+        .g_id_signin {
+            margin-top: 20px;
+        }
+        #user-info {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        // Function called when Google Sign-In is successful
+        function handleCredentialResponse(response) {
+            // Decode JWT response to retrieve user information
+            const data = JSON.parse(atob(response.credential.split('.')[1]));
+            console.log('User Information:', data);
+
+            // Show user info after successful login
+            document.getElementById('user-info').style.display = 'block';
+            document.getElementById('name').innerText = data.name;
+            document.getElementById('email').innerText = data.email;
+
+            // Redirect after login (replace with your destination URL)
+            window.location.href = 'http://localhost:4141/dashboard';
+        }
+
+        // Google API initialization
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: '590556136470-4r82revnokq0bo6ugf2c25rmv4fbgaic.apps.googleusercontent.com',
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById('g_id_signin'),
+                { theme: 'outline', size: 'large' }  // customization of button
+            );
+            google.accounts.id.prompt(); // Automatically prompt the user to sign in
+        };
+    </script>
+</head>
+<body>
+
+    <h1>Login with Google</h1>
+    <div id="g_id_signin"></div> <!-- Google Sign-In button -->
+
+    <!-- Display user info after login -->
+    <div id="user-info">
+        <h3>Welcome, <span id="name"></span></h3>
+        <p>Email: <span id="email"></span></p>
+    </div>
+
+</body>
+</html>
